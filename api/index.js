@@ -8,12 +8,16 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 
-// Initialize Firebase
-const serviceAccount = require('./firebase-key.json');
+// Initialize Firebase with environment variables
 firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.cert(serviceAccount),
+  credential: firebaseAdmin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Fix for newline characters in privateKey
+  }),
   storageBucket: 'diamondapp-f0ff9.appspot.com',
 });
+
 const db = firebaseAdmin.firestore();
 const bucket = firebaseAdmin.storage().bucket();
 
